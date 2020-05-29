@@ -1,0 +1,109 @@
+﻿@model eCommerceApp.ViewModels.CategoryViewModel
+
+
+@{
+    ViewData["Title"] = "Manage Category";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<link href="https://code.jquery.com/ui/1.12.0-rc.2/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+
+<div class="border backgroundWhite">
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-primary">Category List</h2>
+        </div>
+        <div class="col-6 text-right">
+            <a asp-action="AddUpdate" class="btn btn-primary"><i class="fas fa-plus"></i> &nbsp; Create New Category</a>
+        </div>
+    </div>
+
+    <br />
+    <br />
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Category ID</th>
+                <th>Name</th>
+                <th>Display Order</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Categories.Count > 0)
+            {
+                @foreach (var item in @Model.Categories)
+                {
+                    <tr>
+                        <th scope="row">@item.Id</th>
+                        <td>@item.Name</td>
+                        <td>@item.DisplayOrder</td>
+                        <td>
+                            <a asp-action="AddUpdate" asp-route-id="@item.Id" id="btnEdit" class="btn btn-success text-white">Edit</a>
+                            <a data-value="@item.Id" href="javascript:void(0)" id="btnDelete" class="btn btn-danger text-white">Delete</a>
+                        </td>
+
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4">No Records Found</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5">
+                    <ul class="pagination pull-right">
+                        @for (int pagenum = 1; pagenum <= @Model.PagerCount; pagenum++)
+                        {
+                            <li class="paginate_button"><a href="@Url.Action("index", "category", new { pageNumber = @pagenum })" aria-controls="example" data-dt-idx="2" tabindex="0">@pagenum</a></li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+</div>
+
+<div class="clearfix"></div>
+
+    <div id="dialog" title="edit view" style="overflow: hidden;"></div>
+
+    @section Scripts{
+        <script src="https://code.jquery.com/ui/1.12.0-rc.2/jquery-ui.min.js"></script>
+        <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                var id = 0;
+                $(document).on('click', '#btnDelete', function () {
+                    id = $(this).attr("data-value");
+                    $('#dialog').dialog('open');
+                });
+
+                $('#dialog').dialog({
+                    autoOpen: false,
+                    width: 400,
+                    resizable: false,
+                    title: 'Delete Category',
+                    modal: true,
+                    open: function (event, ui) {
+                        $(this).load("@Url.Action("DeleteConfirmation")", { id: id });
+                    },
+                    buttons: {
+                        "Close": function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            });
+        </script>
+    }
+
+
+
+
+

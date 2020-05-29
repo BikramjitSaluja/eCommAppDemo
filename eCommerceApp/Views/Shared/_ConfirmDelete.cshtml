@@ -1,0 +1,13 @@
+﻿
+@model int
+
+    <form method="post" asp-action="Delete">
+        <div>Are you sure you want to delete this record?</div><br /><br />
+
+        <div class="row">
+            <div class="col">
+                <button type="submit" asp-action="Delete" class="btn btn-primary form-control" asp-route-id="@Model">Delete</button>
+            </div>
+           
+        </div>
+    </form>
